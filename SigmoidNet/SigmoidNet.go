@@ -5,7 +5,7 @@ import (
 	"math"
 	"reflect"
 
-	"nnet"
+	"github.com/plasmaduster355/nnet"
 )
 
 //Sigmoid function
