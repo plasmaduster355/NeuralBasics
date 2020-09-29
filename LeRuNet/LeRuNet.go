@@ -3,7 +3,9 @@ package LeRuNet
 import (
 	"fmt"
 	"math"
-	"nnet"
+	"reflect"
+
+	"github.com/plasmaduster355/nnet"
 )
 
 //LeRu function
@@ -143,4 +145,9 @@ func UpdateWeights(network nnet.Network, learningRate float64, inputData []float
 	}
 	fmt.Println(network.Layer[0].Neuron[0].SelfError)
 	return network
+}
+
+func clear(v interface{}) {
+	p := reflect.ValueOf(v).Elem()
+	p.Set(reflect.Zero(p.Type()))
 }
