@@ -40,7 +40,7 @@ func Neuron2(weights []float64, network nnet.Network, layer int, bias float64) f
 	return LeRu(g + bias)
 }
 
-func Derivative(output float64) float64 {
+func Derivative(value float64) float64 {
 	bitSet := (value > 0)
 	bitSetVar := float64(0)
 	if bitSet {
