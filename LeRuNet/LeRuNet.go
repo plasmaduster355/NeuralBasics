@@ -11,7 +11,7 @@ import (
 //LeRu function
 func LeRu(value float64) float64 {
 	bitSet := (value > 0)
-	bitSetVar := float64(0)
+	bitSetVar := 0.001 * float64(0)
 	if bitSet {
 		bitSetVar = float64(1)
 	}
@@ -42,7 +42,7 @@ func Neuron2(weights []float64, network nnet.Network, layer int, bias float64) f
 
 func Derivative(value float64) float64 {
 	bitSet := (value > 0)
-	bitSetVar := float64(0)
+	bitSetVar := float64(0.001)
 	if bitSet {
 		bitSetVar = float64(1)
 	}
