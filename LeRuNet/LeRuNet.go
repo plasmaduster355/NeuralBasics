@@ -15,27 +15,8 @@ func LeRu(value float64) float64 {
 	if bitSet {
 		bitSetVar = float64(1)
 	}
-
-	fmt.Println(float64(1) * bitSetVar)
 	x := value * bitSetVar
 	return math.Abs(x)
-}
-
-//Find the Cost
-func Cost(desired float64, output float64) float64 {
-	return math.Exp2(output - desired)
-}
-
-//Inverse of ReLu
-func LeRuPrime(value float64) float64 {
-	bitSet := (value > 0)
-	bitSetVar := float64(0)
-	if bitSet {
-		bitSetVar = float64(1)
-	}
-
-	fmt.Println(float64(1) * bitSetVar)
-	return float64(1) * bitSetVar
 }
 
 //Neuron calculating
@@ -60,16 +41,18 @@ func Neuron2(weights []float64, network nnet.Network, layer int, bias float64) f
 }
 
 func Derivative(output float64) float64 {
-	return LeRuPrime(output)
+	bitSet := (value > 0)
+	bitSetVar := float64(0)
+	if bitSet {
+		bitSetVar = float64(1)
+	}
+	return float64(1) * bitSetVar
 }
 func ErrorBackpropagationOutput(expected float64, result float64) float64 {
 	return (expected - result) * Derivative(result)
 }
 func ErrorBackpropagation(err float64, output float64) float64 {
 	return err * Derivative(output)
-}
-func SquareError(expexted float64, output float64) float64 {
-	return math.Exp2(expexted - output)
 }
 
 //Run the Network
