@@ -15,6 +15,8 @@ func LeRu(value float64) float64 {
 	if bitSet {
 		bitSetVar = float64(1)
 	}
+
+	fmt.Println(float64(1) * bitSetVar)
 	x := value * bitSetVar
 	return math.Abs(x)
 }
@@ -31,6 +33,8 @@ func LeRuPrime(value float64) float64 {
 	if bitSet {
 		bitSetVar = float64(1)
 	}
+
+	fmt.Println(float64(1) * bitSetVar)
 	return float64(1) * bitSetVar
 }
 
@@ -59,7 +63,6 @@ func Derivative(output float64) float64 {
 	return LeRuPrime(output)
 }
 func ErrorBackpropagationOutput(expected float64, result float64) float64 {
-	fmt.Println((expected - result) * Derivative(result))
 	return (expected - result) * Derivative(result)
 }
 func ErrorBackpropagation(err float64, output float64) float64 {
