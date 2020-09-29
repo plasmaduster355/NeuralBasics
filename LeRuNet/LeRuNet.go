@@ -59,6 +59,7 @@ func Derivative(output float64) float64 {
 	return LeRuPrime(output)
 }
 func ErrorBackpropagationOutput(expected float64, result float64) float64 {
+	fmt.Println((expected - result) * Derivative(result))
 	return (expected - result) * Derivative(result)
 }
 func ErrorBackpropagation(err float64, output float64) float64 {
