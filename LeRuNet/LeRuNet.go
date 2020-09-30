@@ -46,7 +46,7 @@ func Derivative(value float64) float64 {
 	if bitSet == true {
 		bitSetVar = float64(1)
 	}
-	fmt.Println(bitSetVar)
+	fmt.Println(float64(1) * bitSetVar)
 	return float64(1) * bitSetVar
 }
 func ErrorBackpropagationOutput(expected float64, result float64) float64 {
