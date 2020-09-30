@@ -16,7 +16,7 @@ func LeRu(value float64) float64 {
 		bitSetVar = float64(1)
 	}
 	x := value * bitSetVar
-	fmt.Println(math.Abs(x))
+	fmt.Println(value)
 	return math.Abs(x)
 }
 
