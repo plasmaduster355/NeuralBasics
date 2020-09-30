@@ -16,6 +16,7 @@ func LeRu(value float64) float64 {
 		bitSetVar = float64(1)
 	}
 	x := value * bitSetVar
+	fmt.Println(math.Abs(x))
 	return math.Abs(x)
 }
 
@@ -46,7 +47,6 @@ func Derivative(value float64) float64 {
 	if bitSet == true {
 		bitSetVar = float64(1)
 	}
-	fmt.Println(float64(1) * bitSetVar)
 	return float64(1) * bitSetVar
 }
 func ErrorBackpropagationOutput(expected float64, result float64) float64 {
