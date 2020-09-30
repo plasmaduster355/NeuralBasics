@@ -16,7 +16,6 @@ func LeRu(value float64) float64 {
 		bitSetVar = float64(1)
 	}
 	x := value * bitSetVar
-	fmt.Println(math.Abs(x))
 	return math.Abs(x)
 }
 
@@ -44,9 +43,10 @@ func Neuron2(weights []float64, network nnet.Network, layer int, bias float64) f
 func Derivative(value float64) float64 {
 	bitSet := (value > 0)
 	bitSetVar := float64(0.3)
-	if bitSet {
+	if bitSet == true {
 		bitSetVar = float64(1)
 	}
+	fmt.Println(bitSetVar)
 	return float64(1) * bitSetVar
 }
 func ErrorBackpropagationOutput(expected float64, result float64) float64 {
