@@ -1,7 +1,6 @@
 package SigmoidNet
 
 import (
-	"fmt"
 	"math"
 	"reflect"
 
@@ -11,11 +10,6 @@ import (
 //Sigmoid function
 func Sigmoid(value float64) float64 {
 	return (1.0 / (1.0 + (math.Exp(-1.0 * (value)))))
-}
-
-//Inverse of sigmoid
-func SigmoidPrime(value float64) float64 {
-	return math.Log(value / (1 - value))
 }
 
 //Find the Cost
@@ -53,12 +47,9 @@ func ErrorBackpropagationOutput(expected float64, result float64) float64 {
 func ErrorBackpropagation(err float64, output float64) float64 {
 	return err * Derivative(output)
 }
-func SquareError(expexted float64, output float64) float64 {
-	return math.Exp2(expexted - output)
-}
 
 //Run the Network
-func RunNetwork(network nnet.Network, inputs []float64) nnet.Network {
+func RunNetwork(network nnet.Network, inputs []float64) (nnet.Network, map[string]float64) {
 	//Iterate over Layers
 	for x, layer := range network.Layer {
 		//if it's the first layer use the input data
@@ -81,17 +72,17 @@ func RunNetwork(network nnet.Network, inputs []float64) nnet.Network {
 			}
 		}
 	}
-	//Print Out data
+	result := make(map[string]float64)
 	for _, lastNeuron := range network.Layer[len(network.Layer)-1].Neuron {
-		fmt.Print(lastNeuron.ResultTitle + ": ")
-		fmt.Println(lastNeuron.Output)
+		result[lastNeuron.ResultTitle] = lastNeuron.Output
 	}
-	return network
+	return network, result
 }
 
 //Generate/creates a new Nureal Network
 
-func BackProp(network nnet.Network, expected []float64) nnet.Network {
+func BackProp(network nnet.Network, expected []float64) (nnet.Network, float64) {
+	var score float64
 	//Itaterate over layers backwards
 	for lC := len(network.Layer) - 1; lC >= 0; lC-- {
 		//Itertae over neurons
@@ -101,6 +92,7 @@ func BackProp(network nnet.Network, expected []float64) nnet.Network {
 			//if on first layer
 			if lC == len(network.Layer)-1 {
 				network.Layer[lC].Neuron[nC].SelfError = ErrorBackpropagationOutput(expected[nC], neuron.Output)
+				score = score + math.Abs(network.Layer[lC].Neuron[nC].SelfError)
 			} else {
 				pLayer := network.Layer[lC+1].Neuron
 				var err float64
@@ -108,11 +100,11 @@ func BackProp(network nnet.Network, expected []float64) nnet.Network {
 					err = err + (pL.Weights[nC] * pL.SelfError)
 				}
 				network.Layer[lC].Neuron[nC].SelfError = ErrorBackpropagation(err, neuron.Output)
+				score = score + math.Abs(network.Layer[lC].Neuron[nC].SelfError)
 			}
 		}
 	}
-	fmt.Println(network.Layer[len(network.Layer)-1].Neuron[0].SelfError)
-	return network
+	return network, score
 }
 func UpdateWeights(network nnet.Network, learningRate float64, inputData []float64) nnet.Network {
 	var weight float64
@@ -133,7 +125,6 @@ func UpdateWeights(network nnet.Network, learningRate float64, inputData []float
 			}
 		}
 	}
-	fmt.Println(network.Layer[0].Neuron[0].SelfError)
 	return network
 }
 func clear(v interface{}) {
