@@ -1,7 +1,6 @@
 package LeRuNet
 
 import (
-	"fmt"
 	"math"
 	"reflect"
 
@@ -52,7 +51,7 @@ func ErrorBackpropagation(err float64, output float64) float64 {
 }
 
 //Run the Network
-func RunNetwork(network nnet.Network, inputs []float64) nnet.Network {
+func RunNetwork(network nnet.Network, inputs []float64) (nnet.Network, map[string]float64) {
 	//Iterate over Layers
 	for x, layer := range network.Layer {
 		//if it's the first layer use the input data
@@ -75,15 +74,16 @@ func RunNetwork(network nnet.Network, inputs []float64) nnet.Network {
 			}
 		}
 	}
+	result := make(map[string]float64)
 	//Print Out data
 	for _, lastNeuron := range network.Layer[len(network.Layer)-1].Neuron {
-		fmt.Print(lastNeuron.ResultTitle + ": ")
-		fmt.Println(lastNeuron.Output)
+		result[lastNeuron.ResultTitle] = lastNeuron.Output
 	}
-	return network
+	return network, result
 }
 
-func BackProp(network nnet.Network, expected []float64) nnet.Network {
+func BackProp(network nnet.Network, expected []float64) (nnet.Network, float64) {
+	var score float64
 	//Itaterate over layers backwards
 	for lC := len(network.Layer) - 1; lC >= 0; lC-- {
 		//Itertae over neurons
@@ -93,6 +93,7 @@ func BackProp(network nnet.Network, expected []float64) nnet.Network {
 			//if on first layer
 			if lC == len(network.Layer)-1 {
 				network.Layer[lC].Neuron[nC].SelfError = ErrorBackpropagationOutput(expected[nC], neuron.Output)
+				score = score + math.Abs(network.Layer[lC].Neuron[nC].SelfError)
 			} else {
 				pLayer := network.Layer[lC+1].Neuron
 				var err float64
@@ -100,11 +101,12 @@ func BackProp(network nnet.Network, expected []float64) nnet.Network {
 					err = err + (pL.Weights[nC] * pL.SelfError)
 				}
 				network.Layer[lC].Neuron[nC].SelfError = ErrorBackpropagation(err, neuron.Output)
+				score = score + math.Abs(network.Layer[lC].Neuron[nC].SelfError)
 			}
 		}
+
 	}
-	fmt.Println(network.Layer[len(network.Layer)-1].Neuron[0].SelfError)
-	return network
+	return network, score
 }
 
 func UpdateWeights(network nnet.Network, learningRate float64, inputData []float64) nnet.Network {
@@ -126,7 +128,6 @@ func UpdateWeights(network nnet.Network, learningRate float64, inputData []float
 			}
 		}
 	}
-	fmt.Println(network.Layer[0].Neuron[0].SelfError)
 	return network
 }
 
