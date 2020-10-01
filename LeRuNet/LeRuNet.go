@@ -10,14 +10,7 @@ import (
 
 //LeRu function
 func LeRu(value float64) float64 {
-	bitSet := (value > 0)
-	bitSetVar := 0.3 * float64(0)
-	if bitSet {
-		bitSetVar = float64(1)
-	}
-	x := value * bitSetVar
-	fmt.Println(value)
-	return math.Abs(x)
+	return math.Max(value*0.01, value)
 }
 
 //Neuron calculating
@@ -30,7 +23,8 @@ func Neuro(weights []float64, values []float64, bias float64) float64 {
 	} else {
 		panic("Not enough/too much input data given")
 	}
-	return LeRu(g + bias)
+
+	return LeRu(g + 0.01)
 }
 
 func Neuron2(weights []float64, network nnet.Network, layer int, bias float64) float64 {
@@ -42,12 +36,13 @@ func Neuron2(weights []float64, network nnet.Network, layer int, bias float64) f
 }
 
 func Derivative(value float64) float64 {
-	bitSet := (value > 0)
-	bitSetVar := float64(0.3)
-	if bitSet == true {
+	var bitSetVar float64
+	if value >= 0 {
 		bitSetVar = float64(1)
+	} else {
+		bitSetVar = 0.01
 	}
-	return float64(1) * bitSetVar
+	return bitSetVar
 }
 func ErrorBackpropagationOutput(expected float64, result float64) float64 {
 	return (expected - result) * Derivative(result)
