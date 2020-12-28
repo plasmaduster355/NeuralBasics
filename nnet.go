@@ -91,7 +91,7 @@ func GenerateNetwork(layerCount int, neuron_Array []int, amountOfInputData int, 
 			zeroOut = []float64{}
 			//Randomize new weights
 			for g <= len(network.Layer[len(network.Layer)-1].Neuron)-1 {
-				newWeights = append(newWeights, 0)
+				newWeights = append(newWeights, Random())
 				zeroOut = append(zeroOut, 0.0)
 				g++
 			}
