@@ -40,10 +40,10 @@ func GenerateNetwork(layerCount int, neuron_Array []int, amountOfInputData int, 
 				var h int = 0
 				//Test if on layer 1
 				if x != 0 {
-					//I not on layer 1
+					//If not on layer 1
 					//Make random weights
 					for neuron_Array[x-1] >= h {
-						newWeights = append(newWeights, Random())
+						newWeights = append(newWeights, 0)
 						zeroOut = append(zeroOut, 0.0)
 						h++
 					}
@@ -60,7 +60,7 @@ func GenerateNetwork(layerCount int, neuron_Array []int, amountOfInputData int, 
 					//If on layer 1
 					//Make random weights for inputs
 					for amountOfInputData != h {
-						newWeights = append(newWeights, Random())
+						newWeights = append(newWeights, 0)
 						zeroOut = append(zeroOut, 0.0)
 						h++
 					}
@@ -91,7 +91,7 @@ func GenerateNetwork(layerCount int, neuron_Array []int, amountOfInputData int, 
 			zeroOut = []float64{}
 			//Randomize new weights
 			for g <= len(network.Layer[len(network.Layer)-1].Neuron)-1 {
-				newWeights = append(newWeights, Random())
+				newWeights = append(newWeights, 0)
 				zeroOut = append(zeroOut, 0.0)
 				g++
 			}
