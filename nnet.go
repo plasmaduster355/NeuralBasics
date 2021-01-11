@@ -10,8 +10,6 @@ import (
 	"sort"
 	"strconv"
 	"time"
-
-	"github.com/plasmaduster355/nnet"
 )
 
 type Network struct {
@@ -371,7 +369,7 @@ func Generate(name string, num_inputs int, layer_array []int, layer_types []stri
 	network.OutputFunction = output_function
 	return network
 }
-func UpdateWeights(network nnet.Network, learningRate float64, inputData []float64) nnet.Network {
+func UpdateWeights(network Network, learningRate float64, inputData []float64) Network {
 	var weight float64
 	for lC, layer := range network.Layer {
 		if lC != 0 {
