@@ -375,14 +375,14 @@ func UpdateWeights(network Network, learningRate float64, inputData []float64) N
 		if lC != 0 {
 			for nC, neuron := range layer.Neuron {
 				for iC, i := range network.Layer[lC-1].Neuron {
-					weight = network.Layer[lC].Neuron[nC].Weights[iC] + (learningRate * neuron.SelfError * i.Output)
+					weight = network.Layer[lC].Neuron[nC].Weights[iC] + (learningRate * neuron.Delta * i.Output)
 					network.Layer[lC].Neuron[nC].Weights[iC] = weight
 				}
 			}
 		} else {
 			for nC, neuron := range layer.Neuron {
 				for iC, i := range inputData {
-					weight = network.Layer[lC].Neuron[nC].Weights[iC] + (learningRate * neuron.SelfError * i)
+					weight = network.Layer[lC].Neuron[nC].Weights[iC] + (learningRate * neuron.Delta * i)
 					network.Layer[lC].Neuron[nC].Weights[iC] = weight
 				}
 			}
