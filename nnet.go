@@ -73,7 +73,7 @@ func GeneticRun(network Network, survival_rate float64, creature_count int, smal
 				b, _ := ioutil.ReadFile("temp/" + strconv.Itoa(c) + "net.json")
 				json.Unmarshal(b, &tempnet)
 				tempnet, _ = Run(tempnet, input_data[e])
-				fmt.Println(input_data[e])
+				fmt.Println(e)
 				_, err := CalcError(tempnet, expexted_data[e])
 				creatures[strconv.Itoa(c)] = err
 				c++
