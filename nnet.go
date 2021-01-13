@@ -9,6 +9,7 @@ import (
 	"os"
 	"sort"
 	"strconv"
+	"sync"
 	"time"
 
 	cmap "github.com/orcaman/concurrent-map"
@@ -38,7 +39,7 @@ func main() {
 
 }
 func GeneticRun(network Network, survival_rate float64, creature_count int, small_mutation_rate float64, iteration int, input_data [][]float64, expexted_data [][]float64, verbose bool) Network {
-
+	var wg sync.WaitGroup
 	// Creature map
 	creatures := cmap.New()
 	//ordered creture map
@@ -73,15 +74,11 @@ func GeneticRun(network Network, survival_rate float64, creature_count int, smal
 		//run through envirement
 		for e <= len(input_data)-1 {
 			for c <= creature_count {
-				go run(expexted_data, input_data, e, c, &creatures)
+				wg.Add(1)
+				go run(expexted_data, input_data, e, c, &creatures, &wg)
 				c++
 			}
-			safe := false
-			for safe != true {
-				if _, ok := creatures.Get("1"); ok {
-					safe = true
-				}
-			}
+			wg.Wait()
 			//reset c
 			c = 0
 			//orginize result of errors smallest to largest
@@ -427,7 +424,8 @@ func random() float64 {
 	r := rand.New(seed)
 	return r.Float64()
 }
-func run(expexted_data [][]float64, input_data [][]float64, e int, c int, creatures *cmap.ConcurrentMap) {
+func run(expexted_data [][]float64, input_data [][]float64, e int, c int, creatures *cmap.ConcurrentMap, wg *sync.WaitGroup) {
+	defer wg.Done()
 	var tempnet Network
 	b, _ := ioutil.ReadFile("temp/" + strconv.Itoa(c) + "net.json")
 	json.Unmarshal(b, &tempnet)
