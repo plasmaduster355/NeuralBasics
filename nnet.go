@@ -78,6 +78,8 @@ func GeneticRun(network Network, survival_rate float64, creature_count int, smal
 				creatures[strconv.Itoa(c)] = err
 				c++
 			}
+			//reset c
+			c = 0
 			e++
 		}
 		//reset c
