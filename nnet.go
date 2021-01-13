@@ -112,7 +112,6 @@ func GeneticRun(network Network, survival_rate float64, creature_count int, smal
 					var tempnet Network
 					toReplace := ordered_cretures[c]
 					parent := ordered_cretures[e2]
-
 					b, _ := ioutil.ReadFile("temp/" + parent[0] + "net.json")
 					json.Unmarshal(b, &tempnet)
 
