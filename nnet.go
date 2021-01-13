@@ -76,6 +76,12 @@ func GeneticRun(network Network, survival_rate float64, creature_count int, smal
 				go run(expexted_data, input_data, e, c, &creatures)
 				c++
 			}
+			safe := false
+			for safe != true {
+				if _, ok := creatures.Get("1"); ok {
+					safe = true
+				}
+			}
 			//reset c
 			c = 0
 			//orginize result of errors smallest to largest
