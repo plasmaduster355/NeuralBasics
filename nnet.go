@@ -35,7 +35,7 @@ type Neuron struct {
 func main() {
 
 }
-func GeneticRun(network Network, survival_rate float64, creature_count int, small_mutation_rate float64, iteration int, input_data [][]float64, expexted_data [][]float64) Network {
+func GeneticRun(network Network, survival_rate float64, creature_count int, small_mutation_rate float64, iteration int, input_data [][]float64, expexted_data [][]float64, verbose bool) Network {
 
 	// Creature map
 	creatures := make(map[string]float64)
@@ -100,6 +100,9 @@ func GeneticRun(network Network, survival_rate float64, creature_count int, smal
 				c++
 			}
 			c = 0
+			if verbose {
+				fmt.Println(ordered_cretures[0][1])
+			}
 			//Create new creatures
 			for c <= creature_count {
 				if float64(c) > float64(creature_count)*survival_rate {
