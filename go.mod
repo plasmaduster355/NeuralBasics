@@ -1,3 +1,3 @@
-module github.com/plasmaduster355/nnet
+module nnet
 
 go 1.15
