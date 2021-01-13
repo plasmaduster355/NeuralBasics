@@ -10,6 +10,8 @@ import (
 	"sort"
 	"strconv"
 	"time"
+
+	cmap "github.com/orcaman/concurrent-map"
 )
 
 type Network struct {
@@ -38,7 +40,7 @@ func main() {
 func GeneticRun(network Network, survival_rate float64, creature_count int, small_mutation_rate float64, iteration int, input_data [][]float64, expexted_data [][]float64, verbose bool) Network {
 
 	// Creature map
-	creatures := make(map[string]float64)
+	creatures := cmap.New()
 	//ordered creture map
 	ordered_cretures := make(map[int][]string)
 	// counters
@@ -71,12 +73,7 @@ func GeneticRun(network Network, survival_rate float64, creature_count int, smal
 		//run through envirement
 		for e <= len(input_data)-1 {
 			for c <= creature_count {
-				var tempnet Network
-				b, _ := ioutil.ReadFile("temp/" + strconv.Itoa(c) + "net.json")
-				json.Unmarshal(b, &tempnet)
-				tempnet, _ = Run(tempnet, input_data[e])
-				_, err := CalcError(tempnet, expexted_data[e])
-				creatures[strconv.Itoa(c)] = err
+				go run(expexted_data, input_data, e, c, &creatures)
 				c++
 			}
 			//reset c
@@ -84,16 +81,16 @@ func GeneticRun(network Network, survival_rate float64, creature_count int, smal
 			//orginize result of errors smallest to largest
 			type kv struct {
 				Key   string
-				Value float64
+				Value interface{}
 			}
 
 			var ss []kv
-			for k, v := range creatures {
+			for k, v := range creatures.Items() {
 				ss = append(ss, kv{k, v})
 			}
 
 			sort.Slice(ss, func(i, j int) bool {
-				return ss[i].Value < ss[j].Value
+				return interToFloat(ss[i].Value) < interToFloat(ss[j].Value)
 			})
 			for c <= len(ss)-1 {
 				ordered_cretures[c] = []string{ss[c].Key, fmt.Sprintf("%f", ss[c].Value)}
@@ -424,4 +421,20 @@ func random() float64 {
 	seed := rand.NewSource(time.Now().Unix())
 	r := rand.New(seed)
 	return r.Float64()
+}
+func run(expexted_data [][]float64, input_data [][]float64, e int, c int, creatures *cmap.ConcurrentMap) {
+	var tempnet Network
+	b, _ := ioutil.ReadFile("temp/" + strconv.Itoa(c) + "net.json")
+	json.Unmarshal(b, &tempnet)
+	tempnet, _ = Run(tempnet, input_data[e])
+	_, err := CalcError(tempnet, expexted_data[e])
+	creatures.Set(strconv.Itoa(c), err)
+}
+func interToFloat(unk interface{}) float64 {
+	switch i := unk.(type) {
+	case float64:
+		return i
+	default:
+		return math.NaN()
+	}
 }
