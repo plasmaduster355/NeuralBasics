@@ -99,7 +99,6 @@ func GeneticRun(network Network, survival_rate float64, creature_count int, smal
 				ordered_cretures[c] = []string{ss[c].Key, fmt.Sprintf("%f", ss[c].Value)}
 				c++
 			}
-			fmt.Println(ordered_cretures[0][1])
 			c = 0
 			//Create new creatures
 			for c <= creature_count {
