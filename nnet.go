@@ -77,7 +77,46 @@ func GeneticRun(network Network, survival_rate float64, creature_count int, smal
 				creatures[strconv.Itoa(c)] = err
 				c++
 			}
-			//reset c
+			//orginize result of errors smallest to largest
+			type kv struct {
+				Key   string
+				Value float64
+			}
+
+			var ss []kv
+			for k, v := range creatures {
+				ss = append(ss, kv{k, v})
+			}
+
+			sort.Slice(ss, func(i, j int) bool {
+				return ss[i].Value < ss[j].Value
+			})
+			for c <= len(ss)-1 {
+				ordered_cretures[c] = []string{ss[c].Key, fmt.Sprintf("%f", ss[c].Value)}
+				c++
+			}
+			fmt.Println(ordered_cretures[0][1])
+			c = 0
+			//Create new creatures
+			for c <= creature_count {
+				if float64(c) > float64(creature_count)*survival_rate {
+					var tempnet Network
+					toReplace := ordered_cretures[c]
+					parent := ordered_cretures[e]
+
+					b, _ := ioutil.ReadFile("temp/" + parent[0] + "net.json")
+					json.Unmarshal(b, &tempnet)
+
+					tempnet = smallRandomize(tempnet, small_mutation_rate)
+					b, _ = json.Marshal(tempnet)
+					ioutil.WriteFile("temp/"+toReplace[0]+"net.json", b, 0644)
+				}
+				e++
+				if float64(e) > survival_rate*100.0 {
+					e = 0
+				}
+				c++
+			}
 			c = 0
 			e++
 		}
@@ -85,48 +124,6 @@ func GeneticRun(network Network, survival_rate float64, creature_count int, smal
 		c = 0
 		//reset e
 		e = 0
-		//orginize result of errors smallest to largest
-		type kv struct {
-			Key   string
-			Value float64
-		}
-
-		var ss []kv
-		for k, v := range creatures {
-			ss = append(ss, kv{k, v})
-		}
-
-		sort.Slice(ss, func(i, j int) bool {
-			return ss[i].Value < ss[j].Value
-		})
-		for c <= len(ss)-1 {
-			ordered_cretures[c] = []string{ss[c].Key, fmt.Sprintf("%f", ss[c].Value)}
-			c++
-		}
-		fmt.Println(ordered_cretures[0][1])
-		c = 0
-		//Create new creatures
-		for c <= creature_count {
-			if float64(c) > float64(creature_count)*survival_rate {
-				var tempnet Network
-				toReplace := ordered_cretures[c]
-				parent := ordered_cretures[e]
-
-				b, _ := ioutil.ReadFile("temp/" + parent[0] + "net.json")
-				json.Unmarshal(b, &tempnet)
-
-				tempnet = smallRandomize(tempnet, small_mutation_rate)
-				b, _ = json.Marshal(tempnet)
-				ioutil.WriteFile("temp/"+toReplace[0]+"net.json", b, 0644)
-			}
-			e++
-			if float64(e) > survival_rate*100.0 {
-				e = 0
-			}
-			c++
-		}
-		e = 0
-		c = 0
 		i++
 	}
 	var tempnet Network
