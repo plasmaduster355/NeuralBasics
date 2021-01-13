@@ -49,6 +49,8 @@ func GeneticRun(network Network, survival_rate float64, creature_count int, smal
 	var c int
 	//envirement counter
 	var e int
+	//emvirement 2 counter
+	var e2 int
 	//check if temp directory exist and create on if not
 
 	if _, err := os.Stat("/temp/1.json"); os.IsNotExist(err) {
@@ -77,6 +79,8 @@ func GeneticRun(network Network, survival_rate float64, creature_count int, smal
 				creatures[strconv.Itoa(c)] = err
 				c++
 			}
+			//reset c
+			c = 0
 			//orginize result of errors smallest to largest
 			type kv struct {
 				Key   string
@@ -102,7 +106,7 @@ func GeneticRun(network Network, survival_rate float64, creature_count int, smal
 				if float64(c) > float64(creature_count)*survival_rate {
 					var tempnet Network
 					toReplace := ordered_cretures[c]
-					parent := ordered_cretures[e]
+					parent := ordered_cretures[e2]
 
 					b, _ := ioutil.ReadFile("temp/" + parent[0] + "net.json")
 					json.Unmarshal(b, &tempnet)
@@ -111,19 +115,19 @@ func GeneticRun(network Network, survival_rate float64, creature_count int, smal
 					b, _ = json.Marshal(tempnet)
 					ioutil.WriteFile("temp/"+toReplace[0]+"net.json", b, 0644)
 				}
-				e++
-				if float64(e) > survival_rate*100.0 {
-					e = 0
+				e2++
+				if float64(e2) > survival_rate*100.0 {
+					e2 = 0
 				}
 				c++
 			}
+			e2 = 0
 			c = 0
 			e++
 		}
-		//reset c
-		c = 0
-		//reset e
+
 		e = 0
+		c = 0
 		i++
 	}
 	var tempnet Network
